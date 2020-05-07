@@ -26,23 +26,36 @@ def main():
     parser = argparse.ArgumentParser("parameters")
 
     parser.add_argument('--p', type=float, default=0.75, help='graph probability, (default: 0.4)')
-    parser.add_argument('--c', type=int, default=109, help='channel count for each node, (example: 78, 109, 154), (default: 154)')
-    parser.add_argument('--k', type=int, default=4, help='each node is connected to k nearest neighbors in ring topology, (Default: 4)')
-    parser.add_argument('--m', type=int, default=5, help='number of edges to attach from a new node to existing nodes, (default: 5)')
-    parser.add_argument('--graph-mode', type=str, default="WS", help="random graph, (exampple: ER, WS, BA), (default: WS)")
-    parser.add_argument('--node-num', type=int, default=32, help="number of graph node (default n=32)")
-    parser.add_argument('--model-mode', type=str, default="CIFAR10", help='which network you use, (example: CIFAR10, CIFAR100, SMALL_REGIME, REGULAR_REGIME), (default: CIFAR10)')
-    parser.add_argument('--batch-size', type=int, default=100, help='batch size, (default: 100)')
-    parser.add_argument('--dataset-mode', type=str, default="CIFAR10", help="which dataset you use, (example: CIFAR10, CIFAR100, MNIST), (default: CIFAR10)")
-    parser.add_argument('--is-train', type=bool, default=False, help="True if training, False if test. (default: False)")
+    parser.add_argument('--c', type=int, default=78,
+                        help='channel count for each node, (example: 78, 109, 154), (default: 154)')
+    parser.add_argument('--k', type=int, default=4,
+                        help='each node is connected to k nearest neighbors in ring topology, (Default: 4)')
+    parser.add_argument('--m', type=int, default=5,
+                        help='number of edges to attach from a new node to existing nodes, (default: 5)')
+    parser.add_argument('--graph-mode', type=str, default="WS",
+                        help="random graph, (exampple: ER, WS, BA), (default: WS)")
+    parser.add_argument('--node-num', type=int, default=32,
+                        help="number of graph node (default n=32)")
+    parser.add_argument('--model-mode', type=str, default="CIFAR10",
+                        help='which network you use, (example: CIFAR10, SMALL_REGIME, etc), (default: CIFAR10)')
+    parser.add_argument('--batch-size', type=int, default=100,
+                        help='batch size, (default: 100)')
+    parser.add_argument('--dataset-mode', type=str, default="CIFAR10",
+                        help="which dataset you use, (example: CIFAR10, CIFAR100, MNIST), (default: CIFAR10)")
+    parser.add_argument('--is-train', type=bool, default=False,
+                        help="True if training, False if test. (default: False)")
+    parser.add_argument('--name', type=str, default='', help='name of the current architecture')
+    parser.add_argument('--seed', type=int, default=-1, help='seed in the random graph algorithm')
 
     args = parser.parse_args()
 
     _, test_loader = load_data(args)
 
     if os.path.exists("./checkpoint"):
-        model = Model(args.node_num, args.p, args.c, args.c, args.graph_mode, args.model_mode, args.dataset_mode, args.is_train).to(device)
-        filename = "c_" + str(args.c) + "_p_" + str(args.p) + "_graph_mode_" + args.graph_mode + "_dataset_" + args.dataset_mode
+        model = Model(args.node_num, args.p, args.c, args.c, args.graph_mode, args.model_mode, args.dataset_mode,
+                      args.is_train, args.k, args.m, args.name, args.seed).to(device)
+        filename = "c_" + str(args.c) + "_p_" + str(args.p) + "_graph_" + args.graph_mode + "_dataset_" + \
+                   args.dataset_mode + "_seed_" + str(args.seed) + "_name_" + args.name
         checkpoint = torch.load('./checkpoint/' + filename + 'ckpt.t7')
         model.load_state_dict(checkpoint['model'])
         end_epoch = checkpoint['epoch']
