@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import random
 
 from graph import RandomGraph
 
@@ -12,22 +11,18 @@ def weights_init(m):
             torch.nn.init.zeros_(m.bias)
 
 
-# reference, Thank you.
-# https://github.com/tstandley/Xception-PyTorch/blob/master/xception.py
-# Reporting 1,
-# I don't know which one is better, between 'bias=False' and 'bias=True'
 class SeparableConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1, dilation=1, bias=True):
         super(SeparableConv2d, self).__init__()
         self.conv = nn.Conv2d(in_channels, in_channels, kernel_size, stride, padding, dilation, groups=in_channels,
                               bias=bias)
-        self.pointwise = nn.Conv2d(in_channels, out_channels, 1, 1, 0, 1, 1, bias=bias)
+        self.point_wise = nn.Conv2d(in_channels, out_channels, 1, 1, 0, 1, 1, bias=bias)
 
         # self.apply(weights_init)
 
     def forward(self, x):
         x = self.conv(x)
-        x = self.pointwise(x)
+        x = self.point_wise(x)
         return x
 
 
@@ -49,8 +44,6 @@ class Unit(nn.Module):
         return self.unit(x)
 
 
-# Reporting 2,
-# In the paper, they said "The aggregation is done by weighted sum with learnable positive weights".
 class Node(nn.Module):
     def __init__(self, node, in_edges, in_channels, out_channels, stride=1):
         super(Node, self).__init__()
@@ -59,7 +52,6 @@ class Node(nn.Module):
         self.weights = None
 
         if len(self.in_edges) > 1:
-            # self.weights = nn.Parameter(torch.zeros(len(self.in_edges), requires_grad=True))
             self.weights = nn.Parameter(torch.ones(len(self.in_edges), requires_grad=True))
         self.unit = Unit(in_channels, out_channels, stride=stride)
 
@@ -90,7 +82,10 @@ class RandWire(nn.Module):
         self.out_channels = out_channels
         self.graph_mode = graph_mode
         self.is_train = is_train
-        self.name = name + '_seed_' + str(seed)
+        if seed != -1:
+            self.name = name + '_seed_' + str(seed)
+        else:
+            self.name = name
         self.seed = seed
         self.k = k
         self.m = m

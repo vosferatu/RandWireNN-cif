@@ -22,13 +22,15 @@ def plot_evolution(seed):
     plt.clf()
 
 
-def plot_dataset(dataset):
+def plot_dataset(dataset, network):
     ax = plt.gca()
 
-    random_weights = pd.read_csv(f'c_78_p_0.75_graph_WS_dataset_{dataset}_seed_-1_name_first_gen_opt_SGD0.csv')
-    sgd_default_data = pd.read_csv(f'c_78_p_0.75_graph_WS_dataset_{dataset}_seed_-1_name_first_gen_opt_SGD1.csv')
+    random_weights = pd.read_csv(
+        f'../reporting/c_78_p_0.75_graph_WS_dataset_{dataset}_seed_-1_name_{network}_opt_SGD0.csv')
+    sgd_default_data = pd.read_csv(
+        f'../reporting/c_78_p_0.75_graph_WS_dataset_{dataset}_seed_-1_name_{network}_opt_SGD1.csv')
     sgd_no_momentum_data = pd.read_csv(
-        f'c_78_p_0.75_graph_WS_dataset_{dataset}_seed_-1_name_first_gen_opt_SGD_NO_MOMENTUM1.csv')
+        f'../reporting/c_78_p_0.75_graph_WS_dataset_{dataset}_seed_-1_name_{network}_opt_SGD_NO_MOMENTUM1.csv')
 
     random_weights.plot(kind='line', x='epoch', y='accuracy', ax=ax, title=f'Accuracy evolution {dataset}', legend=True)
     sgd_default_data.plot(kind='line', x='epoch', y='accuracy', ax=ax, title=f'Accuracy evolution {dataset}',
@@ -38,22 +40,23 @@ def plot_dataset(dataset):
 
     ax.legend(['random_weights', 'predicted_sgd_default', 'predicted_sgd_no_momentum'])
 
-    plt.savefig(f'./plots/first_gen_{dataset}.png')
+    plt.savefig(f'./plots/first_gen_{dataset}_old.png')
 
     plt.clf()
 
 
-def plot_optimizer(opt):
+def plot_optimizer(opt, network):
     ax = plt.gca()
 
-    mnist = pd.read_csv(f'c_78_p_0.75_graph_WS_dataset_MNIST_seed_-1_name_first_gen_opt_{opt}.csv')
-    fashion_mnist = pd.read_csv(f'c_78_p_0.75_graph_WS_dataset_FASHION_MNIST_seed_-1_name_first_gen_opt_{opt}.csv')
-    cifar10 = pd.read_csv(f'c_78_p_0.75_graph_WS_dataset_CIFAR10_seed_-1_name_first_gen_opt_{opt}.csv')
-    cifar100 = pd.read_csv(f'c_78_p_0.75_graph_WS_dataset_CIFAR100_seed_-1_name_first_gen_opt_{opt}.csv')
+    mnist = pd.read_csv(f'../reporting/c_78_p_0.75_graph_WS_dataset_MNIST_seed_-1_name_{network}_opt_{opt}.csv')
+    fashion_mnist = pd.read_csv(
+        f'../reporting/c_78_p_0.75_graph_WS_dataset_FASHION_MNIST_seed_-1_name_{network}_opt_{opt}.csv')
+    # cifar10 = pd.read_csv(f'../reporting/c_78_p_0.75_graph_WS_dataset_CIFAR10_seed_-1_name_{network}_opt_{opt}.csv')
+    cifar100 = pd.read_csv(f'../reporting/c_78_p_0.75_graph_WS_dataset_CIFAR100_seed_-1_name_{network}_opt_{opt}.csv')
 
     mnist.plot(kind='line', x='epoch', y='accuracy', ax=ax, title=f'Accuracy evolution {opt}', legend=True)
     fashion_mnist.plot(kind='line', x='epoch', y='accuracy', ax=ax, title=f'Accuracy evolution {opt}', legend=True)
-    cifar10.plot(kind='line', x='epoch', y='accuracy', ax=ax, title=f'Accuracy evolution {opt}', legend=True)
+    # cifar10.plot(kind='line', x='epoch', y='accuracy', ax=ax, title=f'Accuracy evolution {opt}', legend=True)
     cifar100.plot(kind='line', x='epoch', y='accuracy', ax=ax, title=f'Accuracy evolution {opt}', legend=True)
 
     ax.legend(['mnist', 'fashion_mnist', 'cifar10', 'cifar100'])
@@ -64,10 +67,10 @@ def plot_optimizer(opt):
 
 
 datasets = ['MNIST', 'FASHION_MNIST', 'CIFAR10', 'CIFAR100']
-optimizers = ['SGD0', 'SGD0', 'SGD_NO_MOMENTUM1']
+optimizers = ['SGD0', 'SGD1', 'SGD_NO_MOMENTUM1']
 
 for i in datasets:
-    plot_dataset(i)
+    plot_dataset(i, 'frozen')
 
-for i in optimizers:
-    plot_optimizer(i)
+# for i in optimizers:
+#     plot_optimizer(i)

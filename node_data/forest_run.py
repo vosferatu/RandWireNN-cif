@@ -1,15 +1,13 @@
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import RepeatedKFold
-from sklearn import metrics
-from pprint import pprint
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RepeatedKFold
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 
 def first_rand():
@@ -321,6 +319,40 @@ def fourth_rand(seed):
     plt.savefig(f'./random_forest_importances/{seed}_importances.png')
     plt.clf()
 
+
+def predict_weights(df):
+    other_data = df
+    other_data = other_data.drop('connection', axis=1)
+    other_data = other_data.drop('seed', axis=1)
+    other_data = other_data.drop('weight', axis=1)
+
+    x = pd.read_csv(f'./node_data/first_gen.csv', index_col=0)
+
+    # Labels are the values we want to predict
+    y = np.array(x['weight'])  # Remove the labels from the features
+    x = x.drop('weight', axis=1)  # Saving feature names for later use
+    x = x.drop('seed', axis=1)
+    x = x.drop('connection', axis=1)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
+
+    model = RandomForestRegressor(n_estimators=1000, random_state=42)
+    model.fit(x_train, y_train)
+    # evaluate the model
+    cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=42)
+    n_scores = cross_val_score(model, x, y, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1, error_score='raise')
+    # report performance
+    print('MAE: %.3f (%.3f)' % (np.mean(n_scores), np.std(n_scores)))
+
+    y_pred = model.predict(x_test)
+    print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+    print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
+    print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+
+    new_weights = model.predict(other_data)
+
+    df.weight = new_weights
+
+    return df
 
 # for i in range(1, 11):
 #     fourth_rand(i)

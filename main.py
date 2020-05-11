@@ -1,29 +1,18 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-
-from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, CosineAnnealingLR
-
 import argparse
 import os
-
 import time
+
+import torch
+import torch.nn as nn
 from tqdm import tqdm
 
+import train_utils
 from model import Model
-from preprocess import load_data
 from plot import draw_plot
+from preprocess import load_data
 
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
-
-
-def adjust_learning_rate(optimizer, epoch, args):
-    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    lr = args.learning_rate * (0.1 ** (epoch // 30))
-    for param_group in optimizer.param_groups:
-        param_group['lr'] = lr
 
 
 def train(model, train_loader, optimizer, criterion, epoch, args):
@@ -32,7 +21,7 @@ def train(model, train_loader, optimizer, criterion, epoch, args):
     train_loss = 0
     train_acc = 0
     for data, target in tqdm(train_loader, desc="epoch " + str(epoch), mininterval=1):
-        adjust_learning_rate(optimizer, epoch, args)
+        train_utils.adjust_learning_rate(optimizer, epoch, args)
         data, target = data.to(device), target.to(device)
 
         optimizer.zero_grad()
@@ -118,7 +107,7 @@ def main():
 
     if device is 'cuda':
         model = torch.nn.DataParallel(model)
-    optimizer = optim.SGD(model.parameters(), lr=args.learning_rate, weight_decay=5e-5, momentum=0.9)
+    optimizer = torch.optim.SGD(model.parameters(), lr=args.learning_rate, weight_decay=5e-5, momentum=0.9)
     criterion = nn.CrossEntropyLoss().to(device)
 
     epoch_list = []

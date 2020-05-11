@@ -34,6 +34,8 @@ class Model(nn.Module):
             self.num_classes = 1000
         elif self.dataset_mode is "MNIST":
             self.num_classes = 10
+        elif self.dataset_mode is "FASHION_MNIST":
+            self.num_classes = 10
 
         if self.model_mode is "CIFAR10":
             self.CIFAR_conv1 = nn.Sequential(

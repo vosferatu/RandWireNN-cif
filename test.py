@@ -1,25 +1,15 @@
-import torch
-from torchvision import datasets, transforms
-
 import argparse
 import os
+
+import torch
 from tqdm import tqdm
 
+import train_utils
 from model import Model
 from preprocess import load_data
 
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
-
-
-def get_model_parameters(model):
-    total_parameters = 0
-    for layer in list(model.parameters()):
-        layer_parameter = 1
-        for l in list(layer.size()):
-            layer_parameter *= l
-        total_parameters += layer_parameter
-    return total_parameters
 
 
 def main():
@@ -73,7 +63,7 @@ def main():
 
     else:
         assert os.path.exists("./checkpoint/" + str(args.seed) + "ckpt.t7"), "File not found. Please check again."
-    print("Number of model parameters: ", get_model_parameters(model))
+    print("Number of model parameters: ", train_utils.get_model_parameters(model))
 
 
 if __name__ == "__main__":
