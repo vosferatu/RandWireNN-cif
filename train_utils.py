@@ -285,7 +285,7 @@ def load_model(args, text=''):
         end_epoch = checkpoint['epoch']
         best_acc = checkpoint['acc']
         print("[Saved Best Accuracy]: ", best_acc, '%', "[End epochs]: ", end_epoch)
-        # print("Number of model parameters: ", train_utils.get_model_parameters(model))
+        # print("Number of model parameters: ", get_model_parameters(model))
 
         if device == 'cuda':
             model = torch.nn.DataParallel(model)
@@ -317,7 +317,7 @@ def train(model, train_loader, optimizer, criterion, epoch, args):
     train_loss = 0
     train_acc = 0
     for data, target in tqdm(train_loader, desc="epoch " + str(epoch), mininterval=1):
-        train_utils.adjust_learning_rate(optimizer, epoch, args)
+        adjust_learning_rate(optimizer, epoch, args)
         data, target = data.to(device), target.to(device)
 
         optimizer.zero_grad()
@@ -350,7 +350,7 @@ def new_model(args):
     state = {
         'model': model.state_dict(),
         'epoch': 0,
-        'acc': train_utils.run_direct_eval(model, test_loader)
+        'acc': run_direct_eval(model, test_loader)
     }
     if not os.path.isdir('checkpoint'):
         os.mkdir('checkpoint')
@@ -504,7 +504,7 @@ def run_epochs(model, args, train_loader, test_loader, txt=''):
 
             epoch_list.append(epoch)
             train_loss, train_acc = train(model, train_loader, optimizer, criterion, epoch, args)
-            test_acc = train_utils.get_test(model, test_loader)
+            test_acc = get_test(model, test_loader)
             test_acc_list.append(test_acc)
             train_loss_list.append(train_loss)
             train_acc_list.append(train_acc)
