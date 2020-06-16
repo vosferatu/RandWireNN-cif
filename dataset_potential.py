@@ -1,137 +1,14 @@
 import argparse
 import os
-import time
 
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from tqdm import tqdm
 
-import node_data.forest_run as forest
 import train_utils
 from model import Model
-from plot import draw_plot
 from preprocess import load_data
 
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
-
-
-def train(model, train_loader, optimizer, criterion, epoch, args, scheduler):
-    model.train()
-    step = 0
-    train_loss = 0
-    train_acc = 0
-    for data, target in tqdm(train_loader, desc="epoch " + str(epoch), mininterval=1):
-        # train_utils.adjust_learning_rate(optimizer, epoch, args)
-        data, target = data.to(device), target.to(device)
-
-        optimizer.zero_grad()
-        output = model(data)
-        loss = criterion(output, target)
-        loss.backward()
-        optimizer.step()
-        train_loss += loss.data
-        y_pred = output.data.max(1)[1]
-
-        acc = float(y_pred.eq(target.data).sum()) / len(data) * 100.
-        train_acc += acc
-        step += 1
-        scheduler.step(epoch + step / args.batch_size)
-
-        if step % 100 == 0:
-            print("[Epoch {0:4d}] Loss: {1:2.3f} Acc: {2:.3f}%".format(epoch, loss.data, acc), end='')
-            for param_group in optimizer.param_groups:
-                print(",  Current learning rate is: {}".format(param_group['lr']))
-
-    length = len(train_loader.dataset) // args.batch_size
-    return train_loss / length, train_acc / length
-
-
-def get_test(model, test_loader):
-    model.eval()
-    correct = 0
-    with torch.no_grad():
-        for data, target in tqdm(test_loader, desc="evaluation", mininterval=1):
-            data, target = data.to(device), target.to(device)
-            output = model(data)
-            prediction = output.data.max(1)[1]
-            correct += prediction.eq(target.data).sum()
-
-    acc = 100. * float(correct) / len(test_loader.dataset)
-    return acc
-
-
-def run_predicted_eval(model, test_loader):
-    df = train_utils.get_dataset(model)
-    new_weights = forest.predict_weights(df)
-    train_utils.adjust_weights(model, new_weights)
-
-    acc = get_test(model, test_loader)
-    print('predicted_weight accuracy: {0:.2f}%'.format(acc))
-
-
-def run_direct_eval(model, test_loader):
-    acc = get_test(model, test_loader)
-    print('random_weight accuracy: {0:.2f}%'.format(acc))
-
-
-def run_epochs(model, args, train_loader, test_loader):
-    if args.optimizer == 'ADAM':
-        optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=args.learning_rate,
-                               weight_decay=5e-5)
-    elif args.optimizer == 'SGD_NO_MOMENTUM':
-        optimizer = optim.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=args.learning_rate,
-                              weight_decay=5e-5)
-    else:
-        optimizer = optim.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=args.learning_rate,
-                              weight_decay=5e-5, momentum=0.9)
-
-    criterion = nn.CrossEntropyLoss().to(device)
-
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 10, T_mult=2)
-
-    epoch_list = []
-    test_acc_list = []
-    train_acc_list = []
-    train_loss_list = []
-    max_test_acc = 0
-    if not os.path.isdir("reporting"):
-        os.mkdir("reporting")
-
-    start_time = time.time()
-    with open("./reporting/" + "c_" + str(args.c) + "_p_" + str(args.p) + "_graph_" + args.graph_mode + "_dataset_" +
-              args.dataset_mode + "_seed_" + str(args.seed) + "_name_" + args.name + "_opt_" + args.optimizer +
-              str(args.opt) + ".csv", "w") as f:
-        f.write('epoch,accuracy,train_loss,train_acc,time\n')
-        for epoch in range(1, args.epochs + 1):
-
-            epoch_list.append(epoch)
-            train_loss, train_acc = train(model, train_loader, optimizer, criterion, epoch, args, scheduler)
-            test_acc = get_test(model, test_loader)
-            test_acc_list.append(test_acc)
-            train_loss_list.append(train_loss)
-            train_acc_list.append(train_acc)
-            print('Test set accuracy: {0:.2f}%, Best accuracy: {1:.2f}%'.format(test_acc, max_test_acc))
-            f.write("{0:3d},{1:.3f},{1:.3f},{1:.3f}".format(epoch, test_acc, train_loss, train_acc))
-
-            if max_test_acc < test_acc:
-                print('Saving..')
-                state = {
-                    'model': model.state_dict(),
-                    'acc': test_acc,
-                    'epoch': epoch,
-                }
-                if not os.path.isdir('checkpoint'):
-                    os.mkdir('checkpoint')
-                filename = "c_" + str(args.c) + "_p_" + str(args.p) + "_graph_" + args.graph_mode + "_dataset_" + \
-                           args.dataset_mode + "_seed_" + str(args.seed) + "_name_" + args.name
-                torch.save(state, './checkpoint/' + filename + '_end_ckpt.t7')
-                max_test_acc = test_acc
-                draw_plot(epoch_list, train_loss_list, train_acc_list, test_acc_list)
-            print("Training time: ", time.time() - start_time)
-            f.write("," + str(time.time() - start_time))
-            f.write("\n")
 
 
 def main():
@@ -189,7 +66,7 @@ def main():
         state = {
             'model': model.state_dict(),
             'epoch': 0,
-            'acc': run_direct_eval(model, test_loader)
+            'acc': train_utils.run_direct_eval(model, test_loader)
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
@@ -197,21 +74,19 @@ def main():
                    args.dataset_mode + "_seed_" + str(args.seed) + "_name_" + args.name
         torch.save(state, './checkpoint/' + filename + '_init_ckpt.t7')
 
-    if device is 'cuda':
+    if device == 'cuda':
         model = torch.nn.DataParallel(model)
 
     if args.opt:
-        run_predicted_eval(model, test_loader)
+        train_utils.run_predicted_eval(model, test_loader)
     else:
-        run_direct_eval(model, test_loader)
+        train_utils.run_direct_eval(model, test_loader)
 
     if args.freeze:
         train_utils.freeze_weights(model)
 
-    train_utils.check_weights(model)
-
     if args.epochs > 0:
-        run_epochs(model, args, train_loader, test_loader)
+        train_utils.run_epochs(model, args, train_loader, test_loader)
 
 
 if __name__ == '__main__':

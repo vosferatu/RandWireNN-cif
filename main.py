@@ -44,20 +44,6 @@ def train(model, train_loader, optimizer, criterion, epoch, args):
     return train_loss / length, train_acc / length
 
 
-def get_test(model, test_loader):
-    model.eval()
-    correct = 0
-    with torch.no_grad():
-        for data, target in tqdm(test_loader, desc="evaluation", mininterval=1):
-            data, target = data.to(device), target.to(device)
-            output = model(data)
-            prediction = output.data.max(1)[1]
-            correct += prediction.eq(target.data).sum()
-
-    acc = 100. * float(correct) / len(test_loader.dataset)
-    return acc
-
-
 def main():
     parser = argparse.ArgumentParser('parameters')
 
@@ -105,7 +91,7 @@ def main():
         model = Model(args.node_num, args.p, args.c, args.c, args.graph_mode, args.model_mode, args.dataset_mode,
                       args.is_train, args.k, args.m, args.name, args.seed).to(device)
 
-    if device is 'cuda':
+    if device == 'cuda':
         model = torch.nn.DataParallel(model)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.learning_rate, weight_decay=5e-5, momentum=0.9)
     criterion = nn.CrossEntropyLoss().to(device)
@@ -126,7 +112,7 @@ def main():
             # scheduler = CosineAnnealingLR(optimizer, epoch)
             epoch_list.append(epoch)
             train_loss, train_acc = train(model, train_loader, optimizer, criterion, epoch, args)
-            test_acc = get_test(model, test_loader)
+            test_acc = train_utils.get_test(model, test_loader)
             test_acc_list.append(test_acc)
             train_loss_list.append(train_loss)
             train_acc_list.append(train_acc)

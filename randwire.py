@@ -16,13 +16,13 @@ class SeparableConv2d(nn.Module):
         super(SeparableConv2d, self).__init__()
         self.conv = nn.Conv2d(in_channels, in_channels, kernel_size, stride, padding, dilation, groups=in_channels,
                               bias=bias)
-        self.point_wise = nn.Conv2d(in_channels, out_channels, 1, 1, 0, 1, 1, bias=bias)
+        self.pointwise = nn.Conv2d(in_channels, out_channels, 1, 1, 0, 1, 1, bias=bias)
 
         # self.apply(weights_init)
 
     def forward(self, x):
         x = self.conv(x)
-        x = self.point_wise(x)
+        x = self.pointwise(x)
         return x
 
 
@@ -56,9 +56,7 @@ class Node(nn.Module):
         self.unit = Unit(in_channels, out_channels, stride=stride)
 
     def forward(self, *input):
-        # print('self.in_edges), self.in_edges)
         if len(self.in_edges) > 1:
-            # print('weights_out: ', self.weights)
             x = (input[0] * torch.sigmoid(self.weights[0]))
 
             for index in range(1, len(input)):

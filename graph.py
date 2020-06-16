@@ -1,5 +1,6 @@
-import networkx as nx
 import os
+
+import networkx as nx
 
 
 class RandomGraph(object):
@@ -23,19 +24,20 @@ class RandomGraph(object):
 
     def make_graph(self):
 
-        if self.graph_mode is "ER":
+        if self.graph_mode == "ER":
             if self.seed == -1:
                 my_graph = nx.random_graphs.erdos_renyi_graph(self.node_num, self.p)
             else:
                 my_graph = nx.random_graphs.erdos_renyi_graph(self.node_num, self.p, self.seed)
 
-        elif self.graph_mode is "WS":
+        elif self.graph_mode == "WS":
             if self.seed == -1:
-                my_graph = nx.random_graphs.connected_watts_strogatz_graph(self.node_num, self.k, self.p)
+                my_graph = nx.random_graphs.connected_watts_strogatz_graph(self.node_num, self.k, self.p, tries=1000)
             else:
-                my_graph = nx.random_graphs.connected_watts_strogatz_graph(self.node_num, self.k, self.p, self.seed)
+                my_graph = nx.random_graphs.connected_watts_strogatz_graph(self.node_num, self.k, self.p, 1000,
+                                                                           self.seed)
 
-        elif self.graph_mode is "BA":
+        elif self.graph_mode == "BA":
             if self.seed == -1:
                 my_graph = nx.random_graphs.barabasi_albert_graph(self.node_num, self.m)
             else:
@@ -107,7 +109,7 @@ class RandomGraph(object):
 
         return out_degree
 
-    def get_metrics(self, df, connection):
+    def get_edge_metrics(self, df, connection):
         net_graph = self.get_network_graph()
         di_graph = self.get_network_di_graph()
 
@@ -271,6 +273,103 @@ class RandomGraph(object):
         df['depth_a'] = depth_a
         df['depth_b'] = depth_b
 
+        return df
+
+    def get_node_metrics(self, df, nodes):
+        net_graph = self.get_network_graph()
+        di_graph = self.get_network_di_graph()
+
+        # UNDIRECTED GRAPH
+        deg_centrality = nx.degree_centrality(net_graph)
+        close_centrality = nx.closeness_centrality(net_graph)
+        bet_centrality = nx.betweenness_centrality(net_graph)
+        curr_flow_close_centrality = nx.current_flow_closeness_centrality(net_graph)
+        curr_flow_bet_centrality = nx.current_flow_betweenness_centrality(net_graph)
+        eigen_centrality = nx.eigenvector_centrality(net_graph)
+        katz_centrality = nx.katz_centrality(net_graph)
+        comm_bet_centrality = nx.communicability_betweenness_centrality(net_graph)
+        load_centrality = nx.load_centrality(net_graph)
+        page_r = nx.pagerank(net_graph)
+        communicability = nx.communicability(net_graph)
+        average_neighbor_degree = nx.average_neighbor_degree(net_graph)
+
+        deg_cent = []
+        close_cent = []
+        bet_cent = []
+        curr_flow_cent = []
+        curr_flow_bet_cent = []
+        eigen_cent = []
+        katz_cent = []
+        comm_bet_cent = []
+        load_cent = []
+        page_rank = []
+        dispersion = []
+        comm = []
+        node_connectivity = []
+        avg_neighbor_degree_a = []
+        group_bet_cent = []
+        group_clo_cent = []
+        group_deg_cent = []
+        volume = []
+        depth = []
+
+        # DIRECTED GRAPH
+        in_deg_centrality = nx.in_degree_centrality(di_graph)
+        out_deg_centrality = nx.out_degree_centrality(di_graph)
+
+        in_deg_cent = []
+        out_deg_cent = []
+        group_in_deg_cent = []
+        group_out_deg_cent = []
+
+        for node in nodes:
+            deg_cent.append(deg_centrality[node])
+            close_cent.append(close_centrality[node])
+            bet_cent.append(bet_centrality[node])
+            curr_flow_cent.append(curr_flow_close_centrality[node])
+            curr_flow_bet_cent.append(curr_flow_bet_centrality[node])
+            eigen_cent.append(eigen_centrality[node])
+            katz_cent.append(katz_centrality[node])
+            comm_bet_cent.append(comm_bet_centrality[node])
+            load_cent.append(load_centrality[node])
+            page_rank.append(page_r[node])
+            dispersion.append(nx.dispersion(net_graph, 0, node))
+            comm.append(communicability[0][node])
+            node_connectivity.append((nx.node_connectivity(net_graph, 0, node)))
+            avg_neighbor_degree_a.append(average_neighbor_degree[node])
+            in_deg_cent.append(in_deg_centrality[node])
+            out_deg_cent.append(out_deg_centrality[node])
+            group_bet_cent.append(nx.group_betweenness_centrality(net_graph, [0, node]))
+            group_clo_cent.append(nx.group_closeness_centrality(net_graph, [0, node]))
+            group_deg_cent.append(nx.group_degree_centrality(net_graph, [0, node]))
+            group_in_deg_cent.append(nx.group_in_degree_centrality(di_graph, [0, node]))
+            group_out_deg_cent.append(nx.group_out_degree_centrality(di_graph, [0, node]))
+            volume.append(nx.volume(net_graph, [0, node]))
+            depth.append(nx.shortest_path_length(net_graph, 0, node))
+
+        df['deg_cent'] = deg_cent
+        df['close_cent'] = close_cent
+        df['bet_cent'] = bet_cent
+        df['curr_flow_cent'] = curr_flow_cent
+        df['curr_flow_bet_cent'] = curr_flow_bet_cent
+        df['eigen_cent'] = eigen_cent
+        df['katz_cent'] = katz_cent
+        df['comm_bet_cent'] = comm_bet_cent
+        df['load_cent'] = load_cent
+        df['page_rank'] = page_rank
+        df['dispersion'] = dispersion
+        df['comm'] = comm
+        df['connectivity'] = node_connectivity
+        df['avg_neighbor_degree_a'] = avg_neighbor_degree_a
+        df['in_deg_cent'] = in_deg_cent
+        df['out_deg_cent'] = out_deg_cent
+        df['group_bet_cent'] = group_bet_cent
+        df['group_clo_cent'] = group_clo_cent
+        df['group_deg_cent'] = group_deg_cent
+        df['group_in_deg_cent'] = group_in_deg_cent
+        df['group_out_deg_cent'] = group_out_deg_cent
+        df['volume'] = volume
+        df['depth'] = depth
         return df
 
     def save_random_graph(self, path):

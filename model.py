@@ -26,18 +26,21 @@ class Model(nn.Module):
         self.num_classes = 1000
         self.dropout_rate = 0.2
 
-        if self.dataset_mode is "CIFAR10":
+        if self.dataset_mode == "CIFAR10":
             self.num_classes = 10
-        elif self.dataset_mode is "CIFAR100":
+        elif self.dataset_mode == "CIFAR100":
             self.num_classes = 100
-        elif self.dataset_mode is "IMAGENET":
+        elif self.dataset_mode == "IMAGENET":
             self.num_classes = 1000
-        elif self.dataset_mode is "MNIST":
+        elif self.dataset_mode == "MNIST":
             self.num_classes = 10
-        elif self.dataset_mode is "FASHION_MNIST":
+        elif self.dataset_mode == "FASHION_MNIST":
             self.num_classes = 10
 
-        if self.model_mode is "CIFAR10":
+        # print(self.num_classes)
+        # self.num_classes = 1000  # TODO
+
+        if self.model_mode == "CIFAR10":
             self.CIFAR_conv1 = nn.Sequential(
                 nn.Conv2d(in_channels=3, out_channels=self.out_channels, kernel_size=3, padding=1),
                 nn.BatchNorm2d(self.out_channels),
@@ -49,18 +52,18 @@ class Model(nn.Module):
             )
             self.CIFAR_conv3 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels, self.out_channels * 2,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv3")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv3")
             )
             self.CIFAR_conv4 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels * 2, self.out_channels * 4,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv4")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv4")
             )
 
             self.CIFAR_classifier = nn.Sequential(
                 nn.Conv2d(self.in_channels * 4, 1280, kernel_size=1),
                 nn.BatchNorm2d(1280)
             )
-        elif self.model_mode is "CIFAR100":
+        elif self.model_mode == "CIFAR100":
             self.CIFAR100_conv1 = nn.Sequential(
                 nn.Conv2d(in_channels=3, out_channels=self.out_channels, kernel_size=3, padding=1),
                 nn.BatchNorm2d(self.out_channels),
@@ -68,21 +71,21 @@ class Model(nn.Module):
 
             self.CIFAR100_conv2 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels, self.out_channels * 2,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv2")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv2")
             )
             self.CIFAR100_conv3 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels * 2, self.out_channels * 4,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv3")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv3")
             )
             self.CIFAR100_conv4 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels * 4, self.out_channels * 8,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv4")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv4")
             )
             self.CIFAR100_classifier = nn.Sequential(
                 nn.Conv2d(self.in_channels * 8, 1280, kernel_size=1),
                 nn.BatchNorm2d(1280)
             )
-        elif self.model_mode is "SMALL_REGIME":
+        elif self.model_mode == "SMALL_REGIME":
             self.SMALL_conv1 = nn.Sequential(
                 nn.Conv2d(in_channels=3, out_channels=self.out_channels // 2, kernel_size=3, padding=1),
                 nn.BatchNorm2d(self.out_channels // 2),
@@ -94,40 +97,40 @@ class Model(nn.Module):
             )
             self.SMALL_conv3 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels, self.out_channels, self.graph_mode,
-                         self.is_train, self.seed, name=self.name+"_conv3")
+                         self.is_train, self.seed, name=self.name + "_conv3")
             )
             self.SMALL_conv4 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels, self.out_channels * 2,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv4")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv4")
             )
             self.SMALL_conv5 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels * 2, self.out_channels * 4,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv5")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv5")
             )
             self.SMALL_classifier = nn.Sequential(
                 nn.Conv2d(self.in_channels * 4, 1280, kernel_size=1),
                 nn.BatchNorm2d(1280)
             )
-        elif self.model_mode is "REGULAR_REGIME":
+        elif self.model_mode == "REGULAR_REGIME":
             self.REGULAR_conv1 = nn.Sequential(
                 nn.Conv2d(in_channels=3, out_channels=self.out_channels // 2, kernel_size=3, padding=1),
                 nn.BatchNorm2d(self.out_channels // 2)
             )
             self.REGULAR_conv2 = nn.Sequential(
                 RandWire(self.node_num // 2, self.p, self.k, self.m, self.in_channels // 2, self.out_channels,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv2")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv2")
             )
             self.REGULAR_conv3 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels, self.out_channels * 2,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv3")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv3")
             )
             self.REGULAR_conv4 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels * 2, self.out_channels * 4,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv4")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv4")
             )
             self.REGULAR_conv5 = nn.Sequential(
                 RandWire(self.node_num, self.p, self.k, self.m, self.in_channels * 4, self.out_channels * 8,
-                         self.graph_mode, self.is_train, self.seed, name=self.name+"_conv5")
+                         self.graph_mode, self.is_train, self.seed, name=self.name + "_conv5")
             )
             self.REGULAR_classifier = nn.Sequential(
                 nn.Conv2d(self.in_channels * 8, 1280, kernel_size=1),
@@ -141,26 +144,26 @@ class Model(nn.Module):
 
     def forward(self, x):
         out = None
-        if self.model_mode is "CIFAR10":
+        if self.model_mode == "CIFAR10":
             out = self.CIFAR_conv1(x)
             out = self.CIFAR_conv2(out)
             out = self.CIFAR_conv3(out)
             out = self.CIFAR_conv4(out)
             out = self.CIFAR_classifier(out)
-        elif self.model_mode is "CIFAR100":
+        elif self.model_mode == "CIFAR100":
             out = self.CIFAR100_conv1(x)
             out = self.CIFAR100_conv2(out)
             out = self.CIFAR100_conv3(out)
             out = self.CIFAR100_conv4(out)
             out = self.CIFAR100_classifier(out)
-        elif self.model_mode is "SMALL_REGIME":
+        elif self.model_mode == "SMALL_REGIME":
             out = self.SMALL_conv1(x)
             out = self.SMALL_conv2(out)
             out = self.SMALL_conv3(out)
             out = self.SMALL_conv4(out)
             out = self.SMALL_conv5(out)
             out = self.SMALL_classifier(out)
-        elif self.model_mode is "REGULAR_REGIME":
+        elif self.model_mode == "REGULAR_REGIME":
             out = self.REGULAR_conv1(x)
             out = self.REGULAR_conv2(out)
             out = self.REGULAR_conv3(out)
