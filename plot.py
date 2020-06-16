@@ -59,5 +59,3 @@ def plot_empirical():
         plt.savefig(f'./plot/empirical_one_accuracy_CIFAR_10_{p}.png')
         plt.clf()
 
-
-plot_empirical()
