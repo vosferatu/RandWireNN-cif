@@ -1,0 +1,526 @@
+_opt_SGD1
+0-[]
+node_op
+1-[0]
+node_op
+2-[0]
+node_op
+3-[1]
+node_op
+4-[2]
+node_op
+5-[0]
+node_op
+6-[0]
+node_op
+7-[5, 6]
+Parameter containing:
+tensor([0.0519, 0.1141], device='cuda:0')
+8-[2, 6, 7]
+Parameter containing:
+tensor([0.0867, 0.1018, 0.0654], device='cuda:0')
+9-[1]
+node_op
+10-[1, 8]
+Parameter containing:
+tensor([0.0366, 0.0350], device='cuda:0')
+11-[8]
+node_op
+12-[5, 9]
+Parameter containing:
+tensor([-0.0139, -0.0325], device='cuda:0')
+13-[10]
+node_op
+14-[1]
+node_op
+15-[12]
+node_op
+16-[9, 12, 13]
+Parameter containing:
+tensor([-0.0272, -0.0030, -0.0118], device='cuda:0')
+17-[4]
+node_op
+18-[1, 12, 13]
+Parameter containing:
+tensor([ 0.0617, -0.0299, -0.0204], device='cuda:0')
+19-[10]
+node_op
+20-[13, 15, 16]
+Parameter containing:
+tensor([0.0071, 0.0208, 0.0364], device='cuda:0')
+21-[8, 11, 19]
+Parameter containing:
+tensor([ 0.0223, -0.0375,  0.0168], device='cuda:0')
+22-[2, 20, 21]
+Parameter containing:
+tensor([0.0711, 0.0477, 0.0200], device='cuda:0')
+23-[0]
+node_op
+24-[3, 11, 17, 22]
+Parameter containing:
+tensor([ 0.0608, -0.0176, -0.0438,  0.1049], device='cuda:0')
+25-[5, 17, 19, 24]
+Parameter containing:
+tensor([-0.0716, -0.0694,  0.0009,  0.0535], device='cuda:0')
+26-[15, 16, 23]
+Parameter containing:
+tensor([-0.0153,  0.0179,  0.0916], device='cuda:0')
+27-[4, 12, 22]
+Parameter containing:
+tensor([ 0.0625, -0.0116,  0.1033], device='cuda:0')
+28-[0]
+node_op
+29-[5, 10, 11, 13, 14, 28]
+Parameter containing:
+tensor([ 0.0427, -0.0036, -0.0281, -0.0948,  0.0320,  0.1748], device='cuda:0')
+30-[9, 10, 23, 28]
+Parameter containing:
+tensor([-0.0573, -0.0145,  0.0862,  0.0885], device='cuda:0')
+31-[12, 17, 30]
+Parameter containing:
+tensor([-0.0364, -0.0638,  0.1119], device='cuda:0')
+32-[1, 7, 17, 25]
+Parameter containing:
+tensor([ 0.0408,  0.0897, -0.0881,  0.0764], device='cuda:0')
+33-[18, 26, 27, 29, 31, 32]
+Parameter containing:
+tensor([1., 1., 1., 1., 1., 1.], device='cuda:0')
+0-[]
+node_op
+1-[0]
+node_op
+2-[1]
+node_op
+3-[2]
+node_op
+4-[0]
+node_op
+5-[0]
+node_op
+6-[5]
+node_op
+7-[1]
+node_op
+8-[3, 6, 7]
+Parameter containing:
+tensor([-0.0183,  0.0473,  0.0704], device='cuda:0')
+9-[2, 4, 5]
+Parameter containing:
+tensor([0.0021, 0.1041, 0.0782], device='cuda:0')
+10-[3]
+node_op
+11-[7]
+node_op
+12-[1]
+node_op
+13-[6]
+node_op
+14-[0]
+node_op
+15-[3, 14]
+Parameter containing:
+tensor([0.0065, 0.1217], device='cuda:0')
+16-[2, 9, 12, 14, 15]
+Parameter containing:
+tensor([-0.0249,  0.0497,  0.0820,  0.0973,  0.0570], device='cuda:0')
+17-[9, 10, 15]
+Parameter containing:
+tensor([ 0.0428, -0.0182,  0.0673], device='cuda:0')
+18-[1, 5]
+Parameter containing:
+tensor([0.0748, 0.0793], device='cuda:0')
+19-[4, 10]
+Parameter containing:
+tensor([0.0741, 0.0257], device='cuda:0')
+20-[6, 16]
+Parameter containing:
+tensor([0.0774, 0.0414], device='cuda:0')
+21-[19]
+node_op
+22-[21]
+node_op
+23-[4, 10, 21, 22]
+Parameter containing:
+tensor([ 1.0772e-01, -4.6639e-03, -3.3746e-02,  1.0331e-04], device='cuda:0')
+24-[13, 22]
+Parameter containing:
+tensor([0.0208, 0.0351], device='cuda:0')
+25-[10, 11, 16, 17, 18]
+Parameter containing:
+tensor([-0.0129, -0.0392,  0.0504,  0.0065,  0.1027], device='cuda:0')
+26-[2, 11, 24, 25]
+Parameter containing:
+tensor([0.0109, 0.0039, 0.0353, 0.0480], device='cuda:0')
+27-[1, 8, 20, 21, 26]
+Parameter containing:
+tensor([ 0.0901,  0.0156,  0.0178, -0.0558,  0.0513], device='cuda:0')
+28-[13, 16]
+Parameter containing:
+tensor([-0.0209,  0.0478], device='cuda:0')
+29-[5, 20, 26]
+Parameter containing:
+tensor([0.1278, 0.0330, 0.0565], device='cuda:0')
+30-[3, 11]
+Parameter containing:
+tensor([-0.0068,  0.0207], device='cuda:0')
+31-[1, 21]
+Parameter containing:
+tensor([ 0.0668, -0.0067], device='cuda:0')
+32-[4, 13, 17]
+Parameter containing:
+tensor([ 0.1088, -0.0246,  0.0363], device='cuda:0')
+33-[23, 27, 28, 29, 30, 31, 32]
+Parameter containing:
+tensor([1., 1., 1., 1., 1., 1., 1.], device='cuda:0')
+0-[]
+node_op
+1-[0]
+node_op
+2-[0]
+node_op
+3-[1]
+node_op
+4-[3]
+node_op
+5-[1, 3, 4]
+Parameter containing:
+tensor([0.0122, 0.0215, 0.0045], device='cuda:0')
+6-[4]
+node_op
+7-[1, 4, 6]
+Parameter containing:
+tensor([ 0.0184,  0.0047, -0.0240], device='cuda:0')
+8-[0]
+node_op
+9-[3]
+node_op
+10-[8]
+node_op
+11-[6, 8, 9]
+Parameter containing:
+tensor([-0.0037,  0.0491,  0.0033], device='cuda:0')
+12-[5]
+node_op
+13-[11]
+node_op
+14-[2, 13]
+Parameter containing:
+tensor([0.0893, 0.0242], device='cuda:0')
+15-[12, 14]
+Parameter containing:
+tensor([0.0154, 0.0155], device='cuda:0')
+16-[4, 6, 9]
+Parameter containing:
+tensor([-0.0150, -0.0633, -0.0054], device='cuda:0')
+17-[1, 6]
+Parameter containing:
+tensor([ 0.0076, -0.0085], device='cuda:0')
+18-[11, 17]
+Parameter containing:
+tensor([0.0058, 0.0177], device='cuda:0')
+19-[5, 14]
+Parameter containing:
+tensor([0.0128, 0.0257], device='cuda:0')
+20-[1, 19]
+Parameter containing:
+tensor([0.0156, 0.0196], device='cuda:0')
+21-[13, 14, 20]
+Parameter containing:
+tensor([0.0002, 0.0266, 0.0114], device='cuda:0')
+22-[2, 4, 12]
+Parameter containing:
+tensor([ 0.0410, -0.0189, -0.0034], device='cuda:0')
+23-[7]
+node_op
+24-[17, 23]
+Parameter containing:
+tensor([0.0144, 0.0256], device='cuda:0')
+25-[6, 10, 24]
+Parameter containing:
+tensor([-0.0138,  0.0226, -0.0002], device='cuda:0')
+26-[13, 14, 23]
+Parameter containing:
+tensor([0.0058, 0.0264, 0.0110], device='cuda:0')
+27-[14]
+node_op
+28-[4, 19, 26]
+Parameter containing:
+tensor([-0.0164,  0.0017,  0.0096], device='cuda:0')
+29-[10, 11, 18, 22, 27]
+Parameter containing:
+tensor([ 0.0068,  0.0131, -0.0022,  0.0122, -0.0148], device='cuda:0')
+30-[3, 23, 24, 26]
+Parameter containing:
+tensor([ 0.0157,  0.0152, -0.0002,  0.0014], device='cuda:0')
+31-[1, 15]
+Parameter containing:
+tensor([-0.1396,  0.0194], device='cuda:0')
+32-[1, 13, 31]
+Parameter containing:
+tensor([ 0.0131, -0.0035,  0.0127], device='cuda:0')
+33-[16, 21, 25, 28, 29, 30, 32]
+Parameter containing:
+tensor([1., 1., 1., 1., 1., 1., 1.], device='cuda:0')
+_opt_SGD_NO_MOMENTUM1
+0-[]
+node_op
+1-[0]
+node_op
+2-[0]
+node_op
+3-[1]
+node_op
+4-[2]
+node_op
+5-[0]
+node_op
+6-[0]
+node_op
+7-[5, 6]
+Parameter containing:
+tensor([0.0519, 0.1141], device='cuda:0')
+8-[2, 6, 7]
+Parameter containing:
+tensor([0.0867, 0.1018, 0.0654], device='cuda:0')
+9-[1]
+node_op
+10-[1, 8]
+Parameter containing:
+tensor([0.0366, 0.0350], device='cuda:0')
+11-[8]
+node_op
+12-[5, 9]
+Parameter containing:
+tensor([-0.0139, -0.0325], device='cuda:0')
+13-[10]
+node_op
+14-[1]
+node_op
+15-[12]
+node_op
+16-[9, 12, 13]
+Parameter containing:
+tensor([-0.0272, -0.0030, -0.0118], device='cuda:0')
+17-[4]
+node_op
+18-[1, 12, 13]
+Parameter containing:
+tensor([ 0.0617, -0.0299, -0.0204], device='cuda:0')
+19-[10]
+node_op
+20-[13, 15, 16]
+Parameter containing:
+tensor([0.0071, 0.0208, 0.0364], device='cuda:0')
+21-[8, 11, 19]
+Parameter containing:
+tensor([ 0.0223, -0.0375,  0.0168], device='cuda:0')
+22-[2, 20, 21]
+Parameter containing:
+tensor([0.0711, 0.0477, 0.0200], device='cuda:0')
+23-[0]
+node_op
+24-[3, 11, 17, 22]
+Parameter containing:
+tensor([ 0.0608, -0.0176, -0.0438,  0.1049], device='cuda:0')
+25-[5, 17, 19, 24]
+Parameter containing:
+tensor([-0.0716, -0.0694,  0.0009,  0.0535], device='cuda:0')
+26-[15, 16, 23]
+Parameter containing:
+tensor([-0.0153,  0.0179,  0.0916], device='cuda:0')
+27-[4, 12, 22]
+Parameter containing:
+tensor([ 0.0625, -0.0116,  0.1033], device='cuda:0')
+28-[0]
+node_op
+29-[5, 10, 11, 13, 14, 28]
+Parameter containing:
+tensor([ 0.0427, -0.0036, -0.0281, -0.0948,  0.0320,  0.1748], device='cuda:0')
+30-[9, 10, 23, 28]
+Parameter containing:
+tensor([-0.0573, -0.0145,  0.0862,  0.0885], device='cuda:0')
+31-[12, 17, 30]
+Parameter containing:
+tensor([-0.0364, -0.0638,  0.1119], device='cuda:0')
+32-[1, 7, 17, 25]
+Parameter containing:
+tensor([ 0.0408,  0.0897, -0.0881,  0.0764], device='cuda:0')
+33-[18, 26, 27, 29, 31, 32]
+Parameter containing:
+tensor([1., 1., 1., 1., 1., 1.], device='cuda:0')
+0-[]
+node_op
+1-[0]
+node_op
+2-[1]
+node_op
+3-[2]
+node_op
+4-[0]
+node_op
+5-[0]
+node_op
+6-[5]
+node_op
+7-[1]
+node_op
+8-[3, 6, 7]
+Parameter containing:
+tensor([-0.0183,  0.0473,  0.0704], device='cuda:0')
+9-[2, 4, 5]
+Parameter containing:
+tensor([0.0021, 0.1041, 0.0782], device='cuda:0')
+10-[3]
+node_op
+11-[7]
+node_op
+12-[1]
+node_op
+13-[6]
+node_op
+14-[0]
+node_op
+15-[3, 14]
+Parameter containing:
+tensor([0.0065, 0.1217], device='cuda:0')
+16-[2, 9, 12, 14, 15]
+Parameter containing:
+tensor([-0.0249,  0.0497,  0.0820,  0.0973,  0.0570], device='cuda:0')
+17-[9, 10, 15]
+Parameter containing:
+tensor([ 0.0428, -0.0182,  0.0673], device='cuda:0')
+18-[1, 5]
+Parameter containing:
+tensor([0.0748, 0.0793], device='cuda:0')
+19-[4, 10]
+Parameter containing:
+tensor([0.0741, 0.0257], device='cuda:0')
+20-[6, 16]
+Parameter containing:
+tensor([0.0774, 0.0414], device='cuda:0')
+21-[19]
+node_op
+22-[21]
+node_op
+23-[4, 10, 21, 22]
+Parameter containing:
+tensor([ 1.0772e-01, -4.6639e-03, -3.3746e-02,  1.0331e-04], device='cuda:0')
+24-[13, 22]
+Parameter containing:
+tensor([0.0208, 0.0351], device='cuda:0')
+25-[10, 11, 16, 17, 18]
+Parameter containing:
+tensor([-0.0129, -0.0392,  0.0504,  0.0065,  0.1027], device='cuda:0')
+26-[2, 11, 24, 25]
+Parameter containing:
+tensor([0.0109, 0.0039, 0.0353, 0.0480], device='cuda:0')
+27-[1, 8, 20, 21, 26]
+Parameter containing:
+tensor([ 0.0901,  0.0156,  0.0178, -0.0558,  0.0513], device='cuda:0')
+28-[13, 16]
+Parameter containing:
+tensor([-0.0209,  0.0478], device='cuda:0')
+29-[5, 20, 26]
+Parameter containing:
+tensor([0.1278, 0.0330, 0.0565], device='cuda:0')
+30-[3, 11]
+Parameter containing:
+tensor([-0.0068,  0.0207], device='cuda:0')
+31-[1, 21]
+Parameter containing:
+tensor([ 0.0668, -0.0067], device='cuda:0')
+32-[4, 13, 17]
+Parameter containing:
+tensor([ 0.1088, -0.0246,  0.0363], device='cuda:0')
+33-[23, 27, 28, 29, 30, 31, 32]
+Parameter containing:
+tensor([1., 1., 1., 1., 1., 1., 1.], device='cuda:0')
+0-[]
+node_op
+1-[0]
+node_op
+2-[0]
+node_op
+3-[1]
+node_op
+4-[3]
+node_op
+5-[1, 3, 4]
+Parameter containing:
+tensor([0.0122, 0.0215, 0.0045], device='cuda:0')
+6-[4]
+node_op
+7-[1, 4, 6]
+Parameter containing:
+tensor([ 0.0184,  0.0047, -0.0240], device='cuda:0')
+8-[0]
+node_op
+9-[3]
+node_op
+10-[8]
+node_op
+11-[6, 8, 9]
+Parameter containing:
+tensor([-0.0037,  0.0491,  0.0033], device='cuda:0')
+12-[5]
+node_op
+13-[11]
+node_op
+14-[2, 13]
+Parameter containing:
+tensor([0.0893, 0.0242], device='cuda:0')
+15-[12, 14]
+Parameter containing:
+tensor([0.0154, 0.0155], device='cuda:0')
+16-[4, 6, 9]
+Parameter containing:
+tensor([-0.0150, -0.0633, -0.0054], device='cuda:0')
+17-[1, 6]
+Parameter containing:
+tensor([ 0.0076, -0.0085], device='cuda:0')
+18-[11, 17]
+Parameter containing:
+tensor([0.0058, 0.0177], device='cuda:0')
+19-[5, 14]
+Parameter containing:
+tensor([0.0128, 0.0257], device='cuda:0')
+20-[1, 19]
+Parameter containing:
+tensor([0.0156, 0.0196], device='cuda:0')
+21-[13, 14, 20]
+Parameter containing:
+tensor([0.0002, 0.0266, 0.0114], device='cuda:0')
+22-[2, 4, 12]
+Parameter containing:
+tensor([ 0.0410, -0.0189, -0.0034], device='cuda:0')
+23-[7]
+node_op
+24-[17, 23]
+Parameter containing:
+tensor([0.0144, 0.0256], device='cuda:0')
+25-[6, 10, 24]
+Parameter containing:
+tensor([-0.0138,  0.0226, -0.0002], device='cuda:0')
+26-[13, 14, 23]
+Parameter containing:
+tensor([0.0058, 0.0264, 0.0110], device='cuda:0')
+27-[14]
+node_op
+28-[4, 19, 26]
+Parameter containing:
+tensor([-0.0164,  0.0017,  0.0096], device='cuda:0')
+29-[10, 11, 18, 22, 27]
+Parameter containing:
+tensor([ 0.0068,  0.0131, -0.0022,  0.0122, -0.0148], device='cuda:0')
+30-[3, 23, 24, 26]
+Parameter containing:
+tensor([ 0.0157,  0.0152, -0.0002,  0.0014], device='cuda:0')
+31-[1, 15]
+Parameter containing:
+tensor([-0.1396,  0.0194], device='cuda:0')
+32-[1, 13, 31]
+Parameter containing:
+tensor([ 0.0131, -0.0035,  0.0127], device='cuda:0')
+33-[16, 21, 25, 28, 29, 30, 32]
+Parameter containing:
+tensor([1., 1., 1., 1., 1., 1., 1.], device='cuda:0')

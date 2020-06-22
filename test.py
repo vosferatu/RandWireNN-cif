@@ -345,6 +345,8 @@ def empirical():
     print(m)
     print(er_p)
 
+    exit(1)
+
     for dataset in datasets:
 
         for prob in p:
@@ -376,6 +378,45 @@ def empirical():
             model, train_loader, test_loader = train_utils.new_model(args)
 
             train_utils.run_epochs(model, args, train_loader, test_loader)
+            num_experiment = num_experiment + 1
+            print('experiment: ', num_experiment)
+
+
+def node_testing():
+    num_experiment = 0
+    nodes_check = [6, 9, 12, 16, 20, 24, 28]
+
+    for dataset in datasets:
+        for node_num in nodes_check:
+            args = train_utils.Args(dataset, 1, 'empirical_nodes', True)
+            args.node_num = node_num
+            args.graph_mode = "WS"
+            model, train_loader, test_loader = train_utils.new_model(args)
+
+            train_utils.run_epochs(model, args, train_loader, test_loader, '_nodes_' + str(args.node_num))
+
+            num_experiment = num_experiment + 1
+            print('experiment: ', num_experiment)
+
+            args = train_utils.Args(dataset, 1, 'empirical_nodes', True)
+            args.node_num = node_num
+            args.graph_mode = "BA"
+            args.m = 5
+            model, train_loader, test_loader = train_utils.new_model(args)
+
+            train_utils.run_epochs(model, args, train_loader, test_loader, '_nodes_' + str(args.node_num))
+
+            num_experiment = num_experiment + 1
+            print('experiment: ', num_experiment)
+
+            args = train_utils.Args(dataset, 1, 'empirical_nodes', True)
+            args.node_num = node_num
+            args.graph_mode = "ER"
+            args.p = 0.2
+            model, train_loader, test_loader = train_utils.new_model(args)
+
+            train_utils.run_epochs(model, args, train_loader, test_loader, '_nodes_' + str(args.node_num))
+
             num_experiment = num_experiment + 1
             print('experiment: ', num_experiment)
 
