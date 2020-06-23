@@ -30,7 +30,7 @@ def draw_plot(epoch_list, train_loss_list, train_acc_list, val_acc_list):
 
 def plot_node_study_time():
     # c_78_p_0.0_graph_WS_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD_k_8.csv
-    nodes_check = [6, 9, 12, 16, 20, 24, 28]
+    nodes_check = [6, 9, 12, 16, 20, 24, 28, 32]
 
     for dataset in datasets:
         values_ER = []
@@ -77,7 +77,7 @@ def plot_node_study_time():
 
 def plot_node_study_accuracy():
     # c_78_p_0.0_graph_WS_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD_k_8.csv
-    nodes_check = [6, 9, 12, 16, 20, 24, 28]
+    nodes_check = [6, 9, 12, 16, 20, 24, 28, 32]
 
     for dataset in datasets:
         values_ER = []
@@ -234,6 +234,11 @@ def plot_empirical_accuracy():
     fig.show()
 
 
-plot_empirical_time()
+def main():
+    plot_empirical_time()
 
-plot_empirical_accuracy()
+    plot_empirical_accuracy()
+
+
+if __name__ == '__main__':
+    main()
