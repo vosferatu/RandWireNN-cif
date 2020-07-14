@@ -51,7 +51,7 @@ def plot_node_study_time():
                 f'./reporting/node_study/c_78_p_0.75_graph_BA_dataset_{dataset}_seed_1_name_empirical_nodes_opt_SGD_nodes_{num}.csv')
             values_BA.append(round(file_BA.time.iloc[-1], 1))
 
-        node_num = ['6', '9', '12', '16', '20', '24', '28']
+        node_num = ['6', '9', '12', '16', '20', '24', '28', '32']
 
         fig = go.Figure(data=[
             go.Bar(name='WS', x=node_num, y=values_WS, text=values_WS, textposition='auto'),
@@ -63,11 +63,11 @@ def plot_node_study_time():
             title=f'{dataset} node number time performance',
             title_x=0.5,
             xaxis_title="Number of nodes",
-            yaxis_title="Time",
+            yaxis_title="Time [s]",
             font=dict(
                 family="Courier New, monospace",
                 size=18,
-                color="#7f7f7f"
+                color="#000000"
             ),
             barmode='group'
         )
@@ -98,7 +98,7 @@ def plot_node_study_accuracy():
                 f'./reporting/node_study/c_78_p_0.75_graph_BA_dataset_{dataset}_seed_1_name_empirical_nodes_opt_SGD_nodes_{num}.csv')
             values_BA.append(round(file_BA.accuracy.iloc[-1], 2))
 
-        node_num = ['6', '9', '12', '16', '20', '24', '28']
+        node_num = ['6', '9', '12', '16', '20', '24', '28', '32']
 
         fig = go.Figure(data=[
             go.Bar(name='WS', x=node_num, y=values_WS, text=values_WS, textposition='auto'),
@@ -110,11 +110,11 @@ def plot_node_study_accuracy():
             title=f'{dataset} node number accuracy evaluation',
             title_x=0.5,
             xaxis_title="Number of nodes",
-            yaxis_title="Accuracy",
+            yaxis_title="Accuracy [%]",
             font=dict(
                 family="Courier New, monospace",
                 size=18,
-                color="#7f7f7f"
+                color="#000000"
             ),
             barmode='group'
         )
@@ -122,7 +122,7 @@ def plot_node_study_accuracy():
         fig.show()
 
 
-def plot_empirical_time():
+def plot_empirical_time(dataset, seed):
     p = [0.0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.0]
     k = np.arange(2, 11, 2)
     m = np.arange(1, 9, 1)
@@ -133,7 +133,7 @@ def plot_empirical_time():
     for prob in p:
         for node_ring in k:
             file_WS = pd.read_csv(
-                f'./reporting/c_78_p_{prob}_graph_WS_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD_k_{node_ring}.csv')
+                f'./reporting/c_78_p_{prob}_graph_WS_dataset_{dataset}_seed_{seed}_name_empirical_one_opt_SGD_k_{node_ring}.csv')
             values_WS.append(round(file_WS.time.iloc[-1], 1))
 
             p_x.append(f'(p={prob},k={node_ring})')
@@ -142,7 +142,7 @@ def plot_empirical_time():
     ba_x = []
     for num_nodes in m:
         file_BA = pd.read_csv(
-            f'./reporting/c_78_p_0.75_graph_BA_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD_m_{num_nodes}.csv')
+            f'./reporting/c_78_p_0.75_graph_BA_dataset_{dataset}_seed_{seed}_name_empirical_one_opt_SGD_m_{num_nodes}.csv')
         values_BA.append(round(file_BA.time.iloc[-1], 1))
         ba_x.append(f'm={num_nodes}')
 
@@ -150,35 +150,35 @@ def plot_empirical_time():
     er_x = []
     for prob in er_p:
         file_ER = pd.read_csv(
-            f'./reporting/c_78_p_{prob}_graph_ER_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD.csv')
+            f'./reporting/c_78_p_{prob}_graph_ER_dataset_{dataset}_seed_{seed}_name_empirical_one_opt_SGD.csv')
         values_ER.append(round(file_ER.time.iloc[-1], 1))
         er_x.append(f'p={prob}')
 
     fig = go.Figure(data=[
         go.Bar(name='WS', x=p_x, y=values_WS, text=values_WS, textposition='auto'),
-        go.Bar(name='ER', x=ba_x, y=values_BA, text=values_BA, textposition='auto'),
-        go.Bar(name='BA', x=er_x, y=values_ER, text=values_ER, textposition='auto')
+        go.Bar(name='BA', x=ba_x, y=values_BA, text=values_BA, textposition='auto'),
+        go.Bar(name='ER', x=er_x, y=values_ER, text=values_ER, textposition='auto')
     ])
     # Change the bar mode
     fig.update_layout(
-        title='CIFAR10 network generator time performance',
+        title=f'{dataset} network generator time performance',
         title_x=0.5,
         xaxis_title="Network generator parameters",
-        yaxis_title="Time",
+        yaxis_title="Time [s]",
         font=dict(
             family="Courier New, monospace",
             size=18,
-            color="#7f7f7f"
+            color="#000000"
         ),
         barmode='group',
         width=1900, height=936
     )
 
-    fig.write_image("plot/cifar10_netgen_time_evaluation.pdf")
+    fig.write_image(f"plot/{dataset}_netgen_time_evaluation.pdf")
     fig.show()
 
 
-def plot_empirical_accuracy():
+def plot_empirical_accuracy(dataset, seed):
     p = [0.0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.0]
     k = np.arange(2, 11, 2)
     m = np.arange(1, 9, 1)
@@ -189,7 +189,7 @@ def plot_empirical_accuracy():
     for prob in p:
         for node_ring in k:
             file_WS = pd.read_csv(
-                f'./reporting/c_78_p_{prob}_graph_WS_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD_k_{node_ring}.csv')
+                f'./reporting/c_78_p_{prob}_graph_WS_dataset_{dataset}_seed_{seed}_name_empirical_one_opt_SGD_k_{node_ring}.csv')
             values_WS.append(round(file_WS.accuracy.iloc[-1], 2))
 
             p_x.append(f'(p={prob},k={node_ring})')
@@ -198,7 +198,7 @@ def plot_empirical_accuracy():
     ba_x = []
     for num_nodes in m:
         file_BA = pd.read_csv(
-            f'./reporting/c_78_p_0.75_graph_BA_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD_m_{num_nodes}.csv')
+            f'./reporting/c_78_p_0.75_graph_BA_dataset_{dataset}_seed_{seed}_name_empirical_one_opt_SGD_m_{num_nodes}.csv')
         values_BA.append(round(file_BA.accuracy.iloc[-1], 2))
         ba_x.append(f'm={num_nodes}')
 
@@ -206,39 +206,112 @@ def plot_empirical_accuracy():
     er_x = []
     for prob in er_p:
         file_ER = pd.read_csv(
-            f'./reporting/c_78_p_{prob}_graph_ER_dataset_CIFAR10_seed_1_name_empirical_one_opt_SGD.csv')
+            f'./reporting/c_78_p_{prob}_graph_ER_dataset_{dataset}_seed_{seed}_name_empirical_one_opt_SGD.csv')
         values_ER.append(round(file_ER.accuracy.iloc[-1], 2))
         er_x.append(f'p={prob}')
 
     fig = go.Figure(data=[
         go.Bar(name='WS', x=p_x, y=values_WS, text=values_WS, textposition='auto'),
-        go.Bar(name='ER', x=ba_x, y=values_BA, text=values_BA, textposition='auto'),
-        go.Bar(name='BA', x=er_x, y=values_ER, text=values_ER, textposition='auto')
+        go.Bar(name='BA', x=ba_x, y=values_BA, text=values_BA, textposition='auto'),
+        go.Bar(name='ER', x=er_x, y=values_ER, text=values_ER, textposition='auto')
     ])
     # Change the bar mode
     fig.update_layout(
-        title='CIFAR10 network generator accuracy evaluation',
+        title=f'{dataset} network generator accuracy evaluation',
         title_x=0.5,
         xaxis_title="Network generator parameters",
-        yaxis_title="Accuracy",
+        yaxis_title="Accuracy [%]",
         font=dict(
             family="Courier New, monospace",
             size=18,
-            color="#7f7f7f"
+            color="#000000"
         ),
         barmode='group',
         width=1900, height=936
     )
 
-    fig.write_image("plot/cifar10_netgen_accuracy_evaluation.pdf")
+    fig.write_image(f"plot/{dataset}_netgen_accuracy_evaluation.pdf")
+    fig.show()
+
+
+def plot_special():
+    p = [0.0, 0.15, 0.3, 0.45, 0.6, 0.75]
+    k = np.arange(2, 11, 2)
+
+    values_WS = []
+    p_x = []
+    for prob in p:
+        for node_ring in k:
+            file_WS = pd.read_csv(
+                f'./reporting/c_78_p_{prob}_graph_WS_dataset_CIFAR100_seed_6_name_empirical_one_opt_SGD_k_{node_ring}.csv')
+            values_WS.append(round(file_WS.accuracy.iloc[-1], 2))
+
+            p_x.append(f'(p={prob},k={node_ring})')
+
+    fig = go.Figure(data=[
+        go.Bar(name='WS', x=p_x, y=values_WS, text=values_WS, textposition='auto')
+    ])
+    # Change the bar mode
+    fig.update_layout(
+        title=f'CIFAR100 network generator accuracy evaluation',
+        title_x=0.5,
+        xaxis_title="Network generator parameters",
+        yaxis_title="Accuracy [%]",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="#000000"
+        ),
+        barmode='group',
+        width=1900, height=936
+    )
+
+    fig.write_image(f"plot/CIFAR100_netgen_accuracy_evaluation.pdf")
+    fig.show()
+
+    values_WS = []
+    p_x = []
+    for prob in p:
+        for node_ring in k:
+            file_WS = pd.read_csv(
+                f'./reporting/c_78_p_{prob}_graph_WS_dataset_CIFAR100_seed_6_name_empirical_one_opt_SGD_k_{node_ring}.csv')
+            values_WS.append(round(file_WS.time.iloc[-1], 2))
+
+            p_x.append(f'(p={prob},k={node_ring})')
+
+    fig = go.Figure(data=[
+        go.Bar(name='WS', x=p_x, y=values_WS, text=values_WS, textposition='auto')
+    ])
+    # Change the bar mode
+    fig.update_layout(
+        title_x=0.5,
+        xaxis_title="Network generator parameters",
+        yaxis_title="Time [s]",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="#000000"
+        ),
+        barmode='group',
+        width=1900, height=936
+    )
+
+    fig.write_image(f"plot/CIFAR100_netgen_time_evaluation.pdf")
     fig.show()
 
 
 def main():
-    plot_empirical_time()
+    current = ['CIFAR10', 'MNIST', 'FASHION_MNIST']
 
-    plot_empirical_accuracy()
+    for data in current:
+        plot_empirical_time(data, 1)
+        plot_empirical_accuracy(data, 1)
 
+    plot_empirical_accuracy('CIFAR100', 6)
+    plot_empirical_time('CIFAR100', 6)
+
+    plot_node_study_time()
+    plot_node_study_accuracy()
 
 if __name__ == '__main__':
     main()

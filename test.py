@@ -4,6 +4,7 @@ import statistics as st
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 import torch
 from numpy.random import RandomState
 from sklearn.cluster import DBSCAN
@@ -15,7 +16,7 @@ from node_data import forest_run
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
-datasets = ['CIFAR10', 'MNIST', 'FASHION_MNIST', 'CIFAR100']
+datasets = ['CIFAR10', 'CIFAR100']
 
 
 def evaluate_forest_first_gen(dataset='CIFAR10', name='first_gen'):
@@ -87,13 +88,13 @@ def randomize_weights(df):
 
 def evaluate_predict_shuffle_end(rand=0):
     for dataset in datasets:
-        model, _, test_loader = train_utils.load_model(train_utils.Args(dataset, -1, 'second_gen'), '_end_')
+        model, _, test_loader = train_utils.new_model(train_utils.Args(dataset, -1, 'potatoes', True))
         random_acc = train_utils.get_test(model, test_loader)
         print('random_acc: ', random_acc)
         predicted_acc, data = train_utils.run_predicted_eval(model, test_loader)
         print('predicted_acc: ', predicted_acc)
 
-        shuffled_acc = [random_acc, predicted_acc]
+        shuffled_acc = []
         for i in range(0, 100):
             np.random.seed()
             if rand:
@@ -105,38 +106,31 @@ def evaluate_predict_shuffle_end(rand=0):
             shuffled_acc.append(new_acc)
             print('shuffled no. ', i, ': ', new_acc)
 
-        ax = plt.gca()
+        st_dev = st.pstdev(shuffled_acc)
+        mean = st.mean(shuffled_acc)
 
-        binwidth = 0.8
-        ax.hist(shuffled_acc, bins=range(min(data), max(data) + binwidth, binwidth))
-        ax.set_xlabel('Accuracy evaluation')
-        ax.set_ylabel('frequency')
+        fig = go.Figure(data=[
+            go.Bar(name='default model', x=['random'], y=[random_acc]),
+            go.Bar(name='predicted', x=['pred'], y=[predicted_acc]),
+            go.Bar(name='shuffle', x=['shuffled'], y=[mean], error_y=[st_dev])
+        ])
+        # Change the bar mode
+        fig.update_layout(
+            title=f'Untrained evaluation',
+            title_x=0.5,
+            xaxis_title="Technique",
+            yaxis_title="Accuracy",
+            font=dict(
+                family="Courier New, monospace",
+                size=18,
+                color="#000000"
+            ),
+            barmode='group',
+            width=1500, height=700
+        )
 
-        plt.savefig(f'./weights/shuffle_100_hist_{dataset}.png')
-        plt.clf()
-
-        ax = plt.gca()
-
-        x_axis = ['random', 'pred']
-        a = []
-        for i in range(0, 100):
-            a.append(str(i))
-
-        x_axis.extend(a)
-
-        barlist = ax.bar(x_axis, shuffled_acc)  # `density=False` would make counts
-        ax.set_ylabel('Accuracy evaluation')
-        ax.set_xlabel('shuffled data')
-        ax.set_title(f'{dataset} shuffled')
-        ax.set_ylim(0, 100)
-
-        barlist[0].set_color('r')
-        barlist[1].set_color('g')
-        for i in range(2, len(barlist)):
-            barlist[i].set_color('b')
-
-        plt.savefig(f'./weights/shuffle_100_{dataset}.png')
-        plt.clf()
+        fig.write_image(f"weights/shuffled_{dataset}_untrained_100.pdf")
+        fig.show()
 
 
 def normal_distribution_weights(model, train_weights=True):
@@ -210,11 +204,25 @@ def hist_weights():
     print('st_dev: ', st_dev)
     print('mean: ', mean)
 
-    ax = plt.gca()
+    # ax = weights.plot.hist(bins=30, alpha=0.5)
 
-    ax = weights.plot.hist(bins=30, alpha=0.5)
+    fig = go.Figure(data=[
+        go.Histogram(x=weights)
+    ])
+    # Change the bar mode
+    fig.update_layout(
+        title_x=0.5,
+        xaxis_title="Weight",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="#000000"
+        ),
+        barmode='group'
+    )
 
-    plt.show()
+    fig.write_image(f"plot/weight_distribution.pdf")
+    fig.show()
 
 
 def get_cooked_model():
@@ -345,8 +353,6 @@ def empirical():
     print(m)
     print(er_p)
 
-    exit(1)
-
     for dataset in datasets:
 
         for prob in p:
@@ -382,8 +388,33 @@ def empirical():
             print('experiment: ', num_experiment)
 
 
+def imagenet_tryout():
+    args = train_utils.Args('IMAGENET', 1, 'empirical_two', True)
+    args.p = 0.2
+    args.graph_mode = 'ER'
+    args.node_num = 6
+    args.epochs = 250
+    args.batch_size = 32
+
+    model, train_loader, test_loader = train_utils.new_model(args)
+
+    # normal run
+
+    train_utils.run_epochs(model, args, train_loader, test_loader)
+
+    # prediction and frozen
+
+    model, train_loader, test_loader = train_utils.new_model(args)
+
+    train_utils.run_predicted_eval(model, test_loader)
+
+    train_utils.freeze_weights(model)
+
+    train_utils.run_epochs(model, args, train_loader, test_loader, '_frozen')
+
+
 def node_testing():
-    num_experiment = 0
+    num_experiment = 1
     nodes_check = [6, 9, 12, 16, 20, 24, 28]
 
     for dataset in datasets:
@@ -422,7 +453,9 @@ def node_testing():
 
 
 def main():
-    empirical()
+    evaluate_predict_shuffle_end()
+    # hist_weights()
+    # imagenet_tryout()
 
 
 if __name__ == "__main__":

@@ -312,6 +312,7 @@ def save_model(model, args, text='_end_'):
 
 
 def train(model, train_loader, optimizer, criterion, epoch, args):
+    torch.cuda.empty_cache()
     model.train()
     step = 0
     train_loss = 0

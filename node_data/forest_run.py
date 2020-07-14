@@ -3,6 +3,7 @@ import pickle
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 from sklearn import metrics
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
@@ -194,6 +195,58 @@ def fourth_rand(seed):
 
     # with open('path/to/file', 'wb') as f:
     #     pickle.dump(rf, f)
+
+
+def plot_importances():
+    with open('./forest_model', 'rb') as f:
+        regr = pickle.load(f)
+
+        x = pd.read_csv(f'./node_data/first_gen.csv', index_col=0)
+
+        # Labels are the values we want to predict
+        y = np.array(x['weight'])  # Remove the labels from the features
+        x = x.drop('weight', axis=1)  # Saving feature names for later use
+        x = x.drop('seed', axis=1)
+        x = x.drop('connection', axis=1)
+
+        characteristics = x.columns
+
+        importances = list(regr.feature_importances_)
+        characteristics_importances = [(characteristic, round(importance, 2)) for characteristic, importance in
+                                       zip(characteristics, importances)]
+        characteristics_importances = sorted(characteristics_importances, key=lambda x: x[1], reverse=True)
+        [print('Variable: {:20} Importance: {}'.format(*pair)) for pair in characteristics_importances]
+
+        i = 0
+        while i < len(importances):
+            if importances[i] < 0.005:
+                print('here')
+                characteristics = characteristics.delete(i)
+                importances.pop(i)
+            else:
+                i = i + 1
+
+        print(characteristics)
+        print(importances)
+
+        fig = go.Figure(data=[
+            go.Bar(name='WS', x=characteristics, y=importances, textposition='auto'),
+        ])
+        # Change the bar mode
+        fig.update_layout(
+            title=f'Random Forest feature importance',
+            title_x=0.5,
+            xaxis_title="Feature",
+            yaxis_title="Importance",
+            font=dict(
+                family="Courier New, monospace",
+                size=18,
+                color="#000000"
+            ),
+            barmode='group'
+        )
+        fig.write_image(f"plot/forest_importance.pdf")
+        fig.show()
 
 
 def predict_weights(df):
@@ -441,3 +494,11 @@ def predict_new_kernels(df):
         print('new_weights: ', new_weights)
 
         return df
+
+
+def main():
+    plot_importances()
+
+
+if __name__ == "__main__":
+    main()

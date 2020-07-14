@@ -37,9 +37,6 @@ class Model(nn.Module):
         elif self.dataset_mode == "FASHION_MNIST":
             self.num_classes = 10
 
-        # print(self.num_classes)
-        # self.num_classes = 1000  # TODO
-
         if self.model_mode == "CIFAR10":
             self.CIFAR_conv1 = nn.Sequential(
                 nn.Conv2d(in_channels=3, out_channels=self.out_channels, kernel_size=3, padding=1),
